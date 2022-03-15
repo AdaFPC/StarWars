@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.letscode.api.starwars.domains.Location;
 import com.letscode.api.starwars.domains.Rebel;
+import com.letscode.api.starwars.models.RebelDTO;
 import com.letscode.api.starwars.services.RebelService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,16 +65,16 @@ public class RebelsController {
           content = @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(
-                  implementation = Rebel.class,
-                  example = "{\"id\":1,\"name\":\"Robin Schuppe I\",\"age\":8,\"gender\":\"NONBINARY\",\"location\":{\"latitude\":-22.464636,\"longitude\":51.22044,\"name\":\"Quincy\"},\"inventory\":{\"water\":8,\"food\":4,\"ammo\":0,\"weapon\":5}}"
+                  implementation = RebelDTO.class,
+                  example = "{\"name\":\"Robin Schuppe I\",\"age\":8,\"gender\":\"NONBINARY\",\"location\":{\"latitude\":-22.464636,\"longitude\":51.22044,\"name\":\"Quincy\"},\"inventory\":{\"water\":8,\"food\":4,\"ammo\":0,\"weapon\":5}}"
               )
           ),
           required = true
       )
   )
-  public ResponseEntity<?> addRebel(
+  public ResponseEntity<Void> addRebel(
       @io.swagger.v3.oas.annotations.parameters.RequestBody
-      @Valid @RequestBody Rebel rebel,
+      @Valid @RequestBody RebelDTO rebel,
       UriComponentsBuilder uriBuilder
   ) {
     return ResponseEntity.created(uriBuilder.replacePath("/api/rebels/{id}").buildAndExpand(rebelServices.add(rebel)).toUri()).build();

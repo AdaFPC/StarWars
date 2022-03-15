@@ -15,9 +15,11 @@ import com.letscode.api.starwars.repository.RebelRepository;
 import com.letscode.api.starwars.utils.TradeUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MarketService {
 
   private final RebelRepository repository;
@@ -31,18 +33,20 @@ public class MarketService {
     if(id.equals(trade.getRebelId()))
       throw new CannotTradeWithSelfException(id);
 
-    givingRebel
+    Rebel savedGivingRebel = givingRebel
         .map(rebel -> rebel.withInventory(TradeUtils.remove(rebel.getInventory(),trade.getGiving())))
         .map(rebel -> rebel.withInventory(TradeUtils.add(rebel.getInventory(),trade.getReceiving())))
         .map(repository::save)
         .orElseThrow();
 
-    receivingRebel
+    Rebel savedReceivingRebel = receivingRebel
         .map(rebel -> rebel.withInventory(TradeUtils.remove(rebel.getInventory(),trade.getReceiving())))
         .map(rebel -> rebel.withInventory(TradeUtils.add(rebel.getInventory(),trade.getGiving())))
         .map(repository::save)
         .orElseThrow();
 
+    log.info("Rebel that gave {} now have {}",trade.getGiving(),savedGivingRebel.getInventory());
+    log.info("Rebel that received {} now have {}",trade.getReceiving(),savedReceivingRebel.getInventory());
   }
 
   private void validateTrade(Long id, Inventory trade, Optional<Rebel> givingRebel) {

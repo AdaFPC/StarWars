@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.letscode.api.starwars.Constants;
 import com.letscode.api.starwars.domains.Losses;
-import com.letscode.api.starwars.domains.RebelReport;
 import com.letscode.api.starwars.domains.enums.InventoryItems;
 import com.letscode.api.starwars.repository.RebelRepository;
 
@@ -33,7 +32,7 @@ public class ReportService {
       Float value = repository.countTraitorPercentage();
       return value == null ? 0f : value;
     }catch (Exception e){
-      log.error("Ocorreu um erro na requisição",e);
+      log.error(Constants.REQUEST_ERROR,e);
       return 0f;
     }
   }
@@ -67,7 +66,7 @@ public class ReportService {
           return repository.countAverageFood();
       }
     }catch (Exception e){
-      log.error("Ocorreu um erro na requisição",e);
+      log.error(Constants.REQUEST_ERROR,e);
       return 0f;
     }
   }
@@ -87,26 +86,9 @@ public class ReportService {
               .ammoLost(repository.countByAmmoLostToTraitors() * Constants.AMMO_POINTS)
               .build();
     }catch (Exception e){
-      log.error("Ocorreu um erro na requisição",e);
+      log.error(Constants.REQUEST_ERROR,e);
       return Losses.builder().build();
     }
-  }
-
-  /**
-   * <p><b>Tallyman Report</b></p>
-   * A comprehensive report for the Tallyman with all above data combined.
-   * @return a singlw {@link RebelReport} with all data.
-   */
-  public RebelReport getRebelReport(){
-    return RebelReport
-        .builder()
-        .traitorPercentage(getTraitorPercentage())
-        .averageAmmo(getAverageResourcePerRebel(InventoryItems.AMMO))
-        .averageFood(getAverageResourcePerRebel(InventoryItems.FOOD))
-        .averageWater(getAverageResourcePerRebel(InventoryItems.WATER))
-        .averageWeapon(getAverageResourcePerRebel(InventoryItems.WEAPON))
-        .traitorLosesInPoints(getLossesToTraitors())
-        .build();
   }
 
 }

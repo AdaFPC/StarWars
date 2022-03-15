@@ -2,6 +2,7 @@ package com.letscode.api.starwars.services;
 
 import java.util.Optional;
 
+import org.dozer.DozerBeanMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.letscode.api.starwars.domains.Location;
 import com.letscode.api.starwars.domains.Rebel;
 import com.letscode.api.starwars.exception.RebelNotFoundException;
+import com.letscode.api.starwars.models.RebelDTO;
 import com.letscode.api.starwars.repository.RebelRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,17 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 public class RebelService {
 
   private final RebelRepository repository;
+  private final DozerBeanMapper mapper = new DozerBeanMapper();
 
   /**
    * <p><b>Add Rebel</b></p>
    * Add a new rebel and get it's ID back
    *
-   * @param rebel An instance of {@link Rebel}
-   * @return The ID of the {@link Rebel}
+   * @param rebel An instance of {@link RebelDTO}
+   * @return The ID of the {@link RebelDTO}
    */
-  public Long add(Rebel rebel) {
+  public Long add(RebelDTO rebel) {
     log.info("Adding a new rebel to the resistance {}", rebel);
-    return repository.save(rebel).getId();
+    return repository.save(mapper.map(rebel,Rebel.class)).getId();
   }
 
   /**
@@ -72,11 +75,12 @@ public class RebelService {
    *
    * @param id       The ID of the rebel being updated
    * @param location A {@link Location} containing the new coordinates of the rebel
+   * @return Returns the updated {@link Rebel}
    * @throws {@link RebelNotFoundException} in case of no such rebel being found with that particular ID
    */
-  public void updateLocation(Long id, Location location) {
+  public Rebel updateLocation(Long id, Location location) {
     log.info("Updating location of rebel with ID {} as {}", id, location);
-    getRebel(id)
+    return getRebel(id)
         .map(rebel -> rebel.withLocation(location))
         .map(repository::save)
         .orElseThrow(() -> new RebelNotFoundException(id));
@@ -87,10 +91,12 @@ public class RebelService {
    * Report a rebel as a traitor.
    *
    * @param id The ID of the rebel being reported
+   * @return Returns the saved {@link Rebel}
    * @throws {@link RebelNotFoundException} in case of no such rebel being found with that particular ID
    */
-  public void reportAsTraitor(Long id) {
+  public Rebel reportAsTraitor(Long id) {
     log.info("WARNING WARNING A rebel with ID {} was reported as a traitor", id);
+    return
     getRebel(id)
         .map(rebel -> rebel.withReportCounter(rebel.getReportCounter() + 1))
         .map(repository::save)

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.letscode</groupId>
     <artifactId>api.starwars</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>api.starwars</name>
     <description>Star Wars Trade Outpost API</description>
 
@@ -27,6 +27,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <sonar.organization>adafpc</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
@@ -62,6 +64,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-data-rest</artifactId>
             <version>1.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>5.5.1</version>
         </dependency>
 
         <dependency>
@@ -159,8 +166,11 @@
                     <excludes>
                         <exclude>**/exceptions/**</exclude>
                         <exclude>**/domains/**</exclude>
+                        <exclude>**/models/**</exclude>
                         <exclude>**/repository/**</exclude>
                         <exclude>**/Constants*</exclude>
+                        <exclude>**/OpenApiConfiguration*</exclude>
+                        <exclude>**/Application*</exclude>
                         <exclude>**/*$*Builder*</exclude>
                     </excludes>
                 </configuration>

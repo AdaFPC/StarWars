@@ -1,5 +1,9 @@
 package com.letscode.api.starwars;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
   public static final int FOOD_POINTS = 1;
@@ -32,4 +36,5 @@ public class Constants {
   public static final String TRADE_POINTS_INVALID_MESSAGE = "Trade points must be equal";
   public static final String TRADE_RECEIVING_INVALID_MESSAGE = "Invalid receiving trade options, it must receive at least one item";
   public static final String TRADE_GIVING_INVALID_MESSAGE = "Invalid giving trade options, it must give at least one item";
+  public static final String REQUEST_ERROR = "There was an error on the request";
 }

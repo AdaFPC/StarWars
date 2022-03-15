@@ -12,13 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.github.javafaker.Faker;
-import com.letscode.api.starwars.domains.*;
+import com.letscode.api.starwars.domains.Inventory;
+import com.letscode.api.starwars.domains.Location;
+import com.letscode.api.starwars.domains.Rebel;
 import com.letscode.api.starwars.domains.enums.Gender;
 import com.letscode.api.starwars.domains.enums.InventoryItems;
 import com.letscode.api.starwars.repository.RebelRepository;
 import com.letscode.api.starwars.utils.TradeUtils;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -76,40 +77,6 @@ class ReportServiceIntegrationTest {
     );
 
   }
-
-  @Test
-  @DisplayName("Full Report Working")
-  void shouldGetFullReport() {
-    Rebel rebel1 = buildRandomRebel(0);
-    Rebel rebel2 = buildRandomRebel(0);
-    repository.saveAll(List.of(rebel1, rebel2));
-
-    RebelReport report = service.getRebelReport();
-
-    assertThat(report)
-        .isNotNull()
-        .hasNoNullFieldsOrProperties()
-        .hasFieldOrPropertyWithValue("traitorPercentage", 0f)
-        .hasFieldOrPropertyWithValue("traitorLosesInPoints", Losses.builder().build());
-
-    assertEquals(
-        ((((float) rebel1.getInventory().getAmmo() + (float) rebel2.getInventory().getAmmo()) / 2)),
-        (report.getAverageAmmo()));
-
-    assertEquals(
-        ((((float) rebel1.getInventory().getFood() + (float) rebel2.getInventory().getFood()) / 2)),
-        (report.getAverageFood()));
-
-    assertEquals(
-        ((((float) rebel1.getInventory().getWater() + (float) rebel2.getInventory().getWater()) / 2)),
-        (report.getAverageWater()));
-
-    assertEquals(
-        ((((float) rebel1.getInventory().getWeapon() + (float) rebel2.getInventory().getWeapon()) / 2)),
-        (report.getAverageWeapon()));
-
-  }
-
 
   @AfterEach
   public void tearDown() {

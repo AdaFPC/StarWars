@@ -3,6 +3,10 @@ package com.letscode.api.starwars.utils;
 import com.letscode.api.starwars.Constants;
 import com.letscode.api.starwars.domains.Inventory;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TradeUtils {
 
   public static int getTradeValue(Inventory inventory) {

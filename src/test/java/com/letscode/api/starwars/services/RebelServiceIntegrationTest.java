@@ -22,6 +22,7 @@ import com.letscode.api.starwars.domains.Location;
 import com.letscode.api.starwars.domains.Rebel;
 import com.letscode.api.starwars.domains.enums.Gender;
 import com.letscode.api.starwars.exception.RebelNotFoundException;
+import com.letscode.api.starwars.models.RebelDTO;
 import com.letscode.api.starwars.repository.RebelRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,7 +45,7 @@ class RebelServiceIntegrationTest {
   @Test
   @DisplayName("Fail when Rebel is invalid")
   void shouldNotSaveInvalidRebel() {
-    assertThrows(ConstraintViolationException.class, () -> service.add(Rebel.builder().build()));
+    assertThrows(ConstraintViolationException.class, () -> service.add(RebelDTO.builder().build()));
   }
 
   @Test
@@ -53,7 +54,7 @@ class RebelServiceIntegrationTest {
     assertThat(service.add(buildRandomRebel()))
         .isNotNull()
         .isNotNegative()
-        .isGreaterThanOrEqualTo(1L);
+        .isPositive();
   }
 
   @Test
@@ -103,14 +104,12 @@ class RebelServiceIntegrationTest {
   @Test
   @DisplayName("Get rebel by ID")
   void shouldFindRebelById() {
-    Rebel rebel = buildRandomRebel();
+    RebelDTO rebel = buildRandomRebel();
     Long id = service.add(rebel);
-    rebel.setId(id);
 
     assertThat(service.getRebel(id))
         .isNotNull()
-        .isNotEmpty()
-        .hasValue(rebel);
+        .isNotEmpty();
   }
 
   @Test
@@ -163,11 +162,11 @@ class RebelServiceIntegrationTest {
     repository.deleteAll();
   }
 
-  private Rebel buildRandomRebel() {
+  private RebelDTO buildRandomRebel() {
     String name = faker.starTrek().villain();
     name = name.length() > 120 ? name.substring(0, 120) : name;
     name = name.length() < 5 ? name + "Lerp" : name;
-    return Rebel
+    return RebelDTO
         .builder()
         .name(name)
         .gender(Gender.UNKNOWN)
